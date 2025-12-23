@@ -1,16 +1,41 @@
-# SDK Bill of Materials (BOM)
+# SDK BOM (Bill of Materials)
 
-[![Java](https://img.shields.io/badge/Java-22%2B-orange.svg)](https://openjdk.java.net/projects/jdk/22/) [![Maven Central](https://img.shields.io/badge/Maven-Central-blue.svg)](https://search.maven.org/artifact/com.slytechs.sdk/sdk-bom) [![License](https://img.shields.io/badge/License-Sly%20Technologies-green.svg)](https://claude.ai/chat/LICENSE)
+[![Maven Central](https://img.shields.io/badge/Maven-Central-blue.svg)](https://search.maven.org/artifact/com.slytechs.sdk/sdk-bom) [![License](https://img.shields.io/badge/License-Apache%20v2-green.svg)](https://claude.ai/chat/LICENSE)
 
-Centralized dependency management for the Sly Technologies Network Analysis SDK. Import this BOM to automatically manage versions across all SDK modules.
+Centralized dependency management for the Sly Technologies Network SDK.
 
-## Overview
+------
 
-The SDK BOM (Bill of Materials) provides a single point of version management for all Sly Technologies SDK modules. By importing the BOM, you can declare SDK dependencies without specifying versions, ensuring compatibility across all modules.
+## Do You Need the BOM?
 
-## Quick Start
+**Most users don't.** If you just want to capture and analyze packets:
 
-### Maven
+```xml
+<dependency>
+    <groupId>com.slytechs.sdk</groupId>
+    <artifactId>jnetpcap-sdk</artifactId>
+    <version>3.0.0</version>
+</dependency>
+```
+
+Done. The starter pulls all dependencies with correct versions.
+
+------
+
+## When to Use the BOM
+
+The BOM is useful when you need:
+
+- **Cherry-pick modules** - Only include specific modules, not the full starter
+- **Multi-module projects** - Define version once in parent, children inherit
+- **Mix commercial + public** - Ensure version consistency across modules
+- **Override versions** - Test with newer/older module versions
+
+------
+
+## Usage Patterns
+
+### Pattern 1: Cherry-Pick Modules
 
 ```xml
 <dependencyManagement>
@@ -26,241 +51,173 @@ The SDK BOM (Bill of Materials) provides a single point of version management fo
 </dependencyManagement>
 
 <dependencies>
-    <!-- Use SDK starters for simplest setup -->
+    <!-- Now omit versions - BOM manages them -->
     <dependency>
         <groupId>com.slytechs.sdk</groupId>
-        <artifactId>jnetpcap-sdk</artifactId>
+        <artifactId>jnetpcap-api</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.slytechs.sdk</groupId>
+        <artifactId>sdk-protocol-telco</artifactId>
     </dependency>
 </dependencies>
 ```
 
-### Gradle
+### Pattern 2: Multi-Module Parent POM
+
+In your parent POM:
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.slytechs.sdk</groupId>
+            <artifactId>sdk-bom</artifactId>
+            <version>3.0.0</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+In child modules:
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.slytechs.sdk</groupId>
+        <artifactId>jnetpcap-api</artifactId>
+        <!-- Version inherited from parent -->
+    </dependency>
+</dependencies>
+```
+
+### Pattern 3: Version Override
+
+With BOM imported, you can still override specific versions:
+
+```xml
+<dependency>
+    <groupId>com.slytechs.sdk</groupId>
+    <artifactId>sdk-protocol-tcpip</artifactId>
+    <version>3.1.0</version> <!-- Override BOM's version -->
+</dependency>
+```
+
+### Pattern 4: Gradle
 
 ```groovy
 dependencies {
     implementation platform('com.slytechs.sdk:sdk-bom:3.0.0')
-    
-    // Use SDK starters for simplest setup
-    implementation 'com.slytechs.sdk:jnetpcap-sdk'
+    implementation 'com.slytechs.sdk:jnetpcap-api'
+    implementation 'com.slytechs.sdk:sdk-protocol-tcpip'
 }
 ```
 
-## Licensing
-
-### Open Source (Apache v2)
-
-The following modules are licensed under Apache License v2.0 and free for any use:
-
-- All `sdk-*` modules (common, protocol-core, protocol-tcpip, protocol-web, protocol-infra)
-- `jnetpcap-bindings`, `jnetpcap-api`, `jnetpcap-sdk`
-- `jnetworks-api`, `jnetworks-pcap`, `jnetworks-sdk`
-
-### Commercial License
-
-The following modules require a commercial license from Sly Technologies:
-
-- `jnetworks-dpdk`, `jnetworks-ntapi`, `jnetworks-afxdp`
-- All `jnet*-bindings` (DPDK, NTAPI, AF_XDP)
-
-Contact [sales@slytechs.com](mailto:sales@slytechs.com) for licensing inquiries.
+------
 
 ## Managed Modules
 
-### SDK Starters (Public - Maven Central, Apache v2)
+### Public Modules (Maven Central)
 
-Convenience modules that pull all required dependencies for common use cases. Free for non-commercial use.
+**SDK Core**
 
-| Module          | Description                                                  |
-| --------------- | ------------------------------------------------------------ |
-| `jnetpcap-sdk`  | jNetPcap starter - pulls all libpcap-based capture dependencies |
-| `jnetworks-sdk` | jNetWorks starter - pulls all jNetWorks pcap dependencies    |
+| Module              | Description                           |
+| ------------------- | ------------------------------------- |
+| `sdk-common`        | Memory management, buffers, utilities |
+| `sdk-protocol-core` | Protocol dissection framework         |
 
-### Core SDK Modules (Public - Maven Central, Apache v2)
-
-| Module              | Description                                               |
-| ------------------- | --------------------------------------------------------- |
-| `sdk-common`        | Core memory management, utilities, Panama FFM integration |
-| `sdk-protocol-core` | Protocol dissection framework and packet descriptors      |
-
-### Protocol Packs (Public - Maven Central, Apache v2)
-
-| Module               | Description                                                 |
-| -------------------- | ----------------------------------------------------------- |
-| `sdk-protocol-tcpip` | TCP/IP stack (Ethernet, IPv4/IPv6, TCP, UDP, ICMP, ARP)     |
-| `sdk-protocol-web`   | Web protocols (HTTP, TLS, DNS, QUIC, WebSocket)             |
-| `sdk-protocol-infra` | Infrastructure protocols (BGP, OSPF, STP, VRRP, LACP, LLDP) |
-
-### jNetPcap Modules (Public - Maven Central, Apache v2)
-
-| Module              | Description                                |
-| ------------------- | ------------------------------------------ |
-| `jnetpcap-bindings` | Libpcap native bindings via Panama FFM     |
-| `jnetpcap-api`      | High-level packet capture and analysis API |
-
-### jNetWorks Core Modules (Public - Maven Central, Apache v2)
-
-| Module           | Description                   |
-| ---------------- | ----------------------------- |
-| `jnetworks-api`  | jNetWorks high-level API      |
-| `jnetworks-pcap` | Libpcap backend for jNetWorks |
-
-### jNetWorks Hardware Backends (Private Repository - Commercial License)
-
-High-performance capture backends supporting up to 800Gbps with hardware acceleration.
-
-| Module            | Description                         |
-| ----------------- | ----------------------------------- |
-| `jnetworks-dpdk`  | DPDK backend (100Gbps+)             |
-| `jnetworks-ntapi` | Napatech SmartNIC backend (800Gbps) |
-| `jnetworks-afxdp` | AF_XDP zero-copy backend            |
-
-### Native Bindings (Private Repository)
-
-Low-level Panama FFM bindings. Available for direct use if needed.
+**Protocol Packs**
 
 | Module               | Description                                   |
 | -------------------- | --------------------------------------------- |
-| `jnetdpdk-bindings`  | DPDK native bindings via Panama FFM           |
-| `jnetntapi-bindings` | Napatech NTAPI native bindings via Panama FFM |
-| `jnetafxdp-bindings` | AF_XDP native bindings via Panama FFM         |
+| `sdk-protocol-tcpip` | Ethernet, IPv4/6, TCP, UDP, VLAN, MPLS, IPsec |
+| `sdk-protocol-web`   | HTTP, TLS, DNS, QUIC, WebSocket               |
+| `sdk-protocol-infra` | BGP, OSPF, STP, VRRP, LACP, LLDP              |
 
-## Repository Access
+**jNetPcap**
 
-The BOM automatically configures access to the Sly Technologies private Maven repository for enterprise modules:
+| Module              | Description                               |
+| ------------------- | ----------------------------------------- |
+| `jnetpcap-bindings` | Low-level libpcap FFM bindings            |
+| `jnetpcap-api`      | High-level capture and analysis API       |
+| `jnetpcap-sdk`      | Starter - pulls all jNetPcap dependencies |
+
+**jNetWorks Core**
+
+| Module           | Description                                       |
+| ---------------- | ------------------------------------------------- |
+| `jnetworks-api`  | High-level jNetWorks API                          |
+| `jnetworks-pcap` | PCAP file read/write support                      |
+| `jnetworks-sdk`  | Starter - pulls all public jNetWorks dependencies |
+
+### Commercial Modules (maven.slytechs.com)
+
+**jNetWorks Hardware**
+
+| Module               | License    |
+| -------------------- | ---------- |
+| `jnetdpdk-bindings`  | Commercial |
+| `jnetworks-dpdk`     | Commercial |
+| `jnetntapi-bindings` | Commercial |
+| `jnetworks-ntapi`    | Commercial |
+| `jnetafxdp-bindings` | Commercial |
+| `jnetworks-afxdp`    | Commercial |
+
+### Commercial Repository Access
+
+Defined by the BOM or use manually
 
 ```xml
 <repositories>
     <repository>
-        <id>slytechs-nexus</id>
-        <url>https://maven.slytechs.com/repository/releases/</url>
+        <id>slytechs-enterprise</id>
+        <url>https://maven.slytechs.com/enterprise</url>
     </repository>
 </repositories>
 ```
 
-For private module access, configure credentials in your `~/.m2/settings.xml`:
-
-```xml
-<servers>
-    <server>
-        <id>slytechs-nexus</id>
-        <username>your-username</username>
-        <password>your-token</password>
-    </server>
-</servers>
-```
+------
 
 ## Managed Plugin Versions
 
-The BOM also manages build plugin versions for consistent builds:
+The BOM also manages common plugin versions:
 
-| Plugin                  | Version |
-| ----------------------- | ------- |
-| `maven-compiler-plugin` | 3.12.1  |
-| `maven-surefire-plugin` | 3.2.5   |
-| `maven-jar-plugin`      | 3.3.0   |
+| Plugin                | Version |
+| --------------------- | ------- |
+| maven-compiler-plugin | 3.12.1  |
+| maven-surefire-plugin | 3.2.5   |
+| maven-jar-plugin      | 3.3.0   |
+| maven-source-plugin   | 3.3.0   |
+| maven-javadoc-plugin  | 3.6.3   |
+
+------
 
 ## Managed Test Dependencies
 
-| Dependency             | Version |
-| ---------------------- | ------- |
-| `junit-jupiter`        | 5.10.2  |
-| `junit-platform-suite` | 1.10.2  |
+| Dependency           | Version |
+| -------------------- | ------- |
+| junit-jupiter        | 5.10.2  |
+| junit-platform-suite | 1.10.2  |
 
-## Requirements
+------
 
-- **Java 22+** - Required for Panama FFM support
-- **Maven 3.8+** or **Gradle 8.0+**
+## Summary
 
-## Common Usage Patterns
+| Approach             | Lines | Use Case                     |
+| -------------------- | ----- | ---------------------------- |
+| Starter with version | 5     | 90% of users                 |
+| BOM import           | 15+   | Cherry-picking, multi-module |
+| BOM as parent        | 8     | Internal SDK modules         |
 
-### Quick Start with jNetPcap (Recommended)
+**When in doubt, use the starter.**
 
-```xml
-<dependencies>
-    <dependency>
-        <groupId>com.slytechs.sdk</groupId>
-        <artifactId>jnetpcap-sdk</artifactId>
-    </dependency>
-</dependencies>
-```
-
-### Quick Start with jNetWorks (Recommended)
-
-```xml
-<dependencies>
-    <dependency>
-        <groupId>com.slytechs.sdk</groupId>
-        <artifactId>jnetworks-sdk</artifactId>
-    </dependency>
-</dependencies>
-```
-
-### Protocol Analysis Only
-
-```xml
-<dependencies>
-    <!-- Pick the protocol packs you need -->
-    <dependency>
-        <groupId>com.slytechs.sdk</groupId>
-        <artifactId>sdk-protocol-tcpip</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>com.slytechs.sdk</groupId>
-        <artifactId>sdk-protocol-web</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>com.slytechs.sdk</groupId>
-        <artifactId>sdk-protocol-infra</artifactId>
-    </dependency>
-</dependencies>
-```
-
-### High-Performance with jNetWorks + DPDK (Commercial)
-
-```xml
-<dependencies>
-    <dependency>
-        <groupId>com.slytechs.sdk</groupId>
-        <artifactId>jnetworks-api</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>com.slytechs.sdk</groupId>
-        <artifactId>jnetworks-dpdk</artifactId>
-    </dependency>
-</dependencies>
-```
-
-### Hardware-Accelerated with Napatech (Commercial)
-
-```xml
-<dependencies>
-    <dependency>
-        <groupId>com.slytechs.sdk</groupId>
-        <artifactId>jnetworks-api</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>com.slytechs.sdk</groupId>
-        <artifactId>jnetworks-ntapi</artifactId>
-    </dependency>
-</dependencies>
-```
-
-## Version History
-
-| Version | Release Date | Notes                                            |
-| ------- | ------------ | ------------------------------------------------ |
-| 3.0.0   | 2025         | Major refactor: Panama FFM, new module structure |
-| 2.x     | 2024         | Legacy JNI-based releases                        |
+------
 
 ## License
 
-Licensed under the Sly Technologies License. See [LICENSE](https://claude.ai/chat/LICENSE) for details.
-
-## Related Projects
-
-- [jnetpcap-api](https://github.com/slytechs-repos/jnetpcap-api) - High-level packet capture API
-- [sdk-common](https://github.com/slytechs-repos/sdk-common) - Core utilities and memory management
-- [sdk-protocol-core](https://github.com/slytechs-repos/sdk-protocol-core) - Protocol dissection framework
+Licensed under Apache License v2.0. See [LICENSE](https://claude.ai/chat/LICENSE) for details.
 
 ------
 
