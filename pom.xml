@@ -1,62 +1,98 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <groupId>com.slytechs.sdk</groupId>
     <artifactId>sdk-bom</artifactId>
     <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    
+
     <name>Sly Technologies SDK BOM</name>
-    <description>Bill of Materials for Sly Technologies SDK modules</description>
+    <description>Bill of Materials for Sly Technologies SDK modules - centralizes version management</description>
+    <url>https://github.com/slytechs-repos/sdk-bom</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>Sly Technologies Inc</name>
+        <url>https://www.slytechs.com</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>markb</id>
+            <name>Mark Bednarczyk</name>
+            <email>mark@slytechs.com</email>
+            <organization>Sly Technologies Inc</organization>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/slytechs-repos/sdk-bom.git</connection>
+        <developerConnection>scm:git:ssh://github.com:slytechs-repos/sdk-bom.git</developerConnection>
+        <url>https://github.com/slytechs-repos/sdk-bom</url>
+    </scm>
 
     <properties>
         <java.version>22</java.version>
-        <maven.compiler.source>22</maven.compiler.source>
-        <maven.compiler.target>22</maven.compiler.target>
+        <maven.compiler.release>22</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        
-        <!-- Dependency versions -->
+
+        <!-- Test dependency versions -->
         <junit.version>5.10.2</junit.version>
-    	<junit-platform.version>1.10.2</junit-platform.version>
+        <junit-platform.version>1.10.2</junit-platform.version>
+        <cryptlex.version>3.32.0</cryptlex.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- Test -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
-        
-        <!-- Test - JUnit Platform Suite -->
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-suite</artifactId>
-            <version>${junit-platform.version}</version>
-        </dependency>
-            
-            <!-- SDK modules -->
+
+            <!-- SDK Core Modules -->
             <dependency>
                 <groupId>com.slytechs.sdk</groupId>
                 <artifactId>sdk-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- Protocol Packs -->
+            <dependency>
+                <groupId>com.slytechs.sdk</groupId>
+                <artifactId>sdk-protocol-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.slytechs.sdk</groupId>
+                <artifactId>sdk-protocol-tcpip</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.slytechs.sdk</groupId>
+                <artifactId>sdk-protocol-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.slytechs.sdk</groupId>
+                <artifactId>sdk-protocol-infra</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- jNetPcap -->
+            <dependency>
+                <groupId>com.slytechs.sdk</groupId>
+                <artifactId>jnetpcap-sdk</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>com.slytechs.sdk</groupId>
+                <artifactId>jnetpcap-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -64,16 +100,81 @@
                 <artifactId>jnetpcap-bindings</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- jNetWorks -->
             <dependency>
                 <groupId>com.slytechs.sdk</groupId>
-                <artifactId>sdk-protocol-core</artifactId>
+                <artifactId>jnetworks-sdk</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
             </dependency>
-           <dependency>
+            <dependency>
                 <groupId>com.slytechs.sdk</groupId>
-                <artifactId>sdk-protocol-tcpip</artifactId>
+                <artifactId>jnetworks-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- jNetWorks Backends -->
+            <dependency>
+                <groupId>com.slytechs.sdk</groupId>
+                <artifactId>jnetworks-dpdk</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.slytechs.sdk</groupId>
+                <artifactId>jnetworks-ntapi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.slytechs.sdk</groupId>
+                <artifactId>jnetworks-pcap</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- Low-level Bindings -->
+            <dependency>
+                <groupId>com.slytechs.sdk</groupId>
+                <artifactId>jnetdpdk-bindings</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.slytechs.sdk</groupId>
+                <artifactId>jnetntapi-bindings</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- Test Dependencies -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-params</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-suite</artifactId>
+                <version>${junit-platform.version}</version>
+            </dependency>
+			<!-- Licensing -->
+			<dependency>
+			    <groupId>com.cryptlex.lexactivator</groupId>
+			    <artifactId>lexactivator</artifactId>
+			    <version>${cryptlex.version}</version>
+			</dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -86,18 +187,22 @@
                     <version>3.12.1</version>
                     <configuration>
                         <release>${java.version}</release>
-                        <compilerArgs>
-                            <arg>--enable-preview</arg>
-                        </compilerArgs>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.2.5</version>
-                    <configuration>
-                        <argLine>--enable-preview</argLine>
-                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.6.3</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -105,9 +210,10 @@
 
     <repositories>
         <repository>
-            <id>slytechs-nexus</id>
-            <name>Sly Technologies Private Repository</name>
+            <id>slytechs-releases</id>
+            <name>Sly Technologies Releases</name>
             <url>https://maven.slytechs.com/repository/releases/</url>
         </repository>
     </repositories>
+
 </project>
