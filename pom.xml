@@ -4,57 +4,36 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.slytechs.sdk</groupId>
+    <parent>
+        <groupId>com.slytechs.sdk</groupId>
+        <artifactId>sdk-parent</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
+        <relativePath>../sdk-parent/pom.xml</relativePath>
+    </parent>
+
     <artifactId>sdk-bom</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Sly Technologies SDK BOM</name>
-    <description>Bill of Materials for Sly Technologies SDK modules - centralizes version management</description>
+    <description>Bill of Materials for Sly Technologies SDK - centralizes version
+        management for all OSS and commercial modules and third-party dependencies</description>
     <url>https://github.com/slytechs-repos/sdk-bom</url>
 
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
-        </license>
-    </licenses>
-
-    <organization>
-        <name>Sly Technologies Inc</name>
-        <url>https://www.slytechs.com</url>
-    </organization>
-
-    <developers>
-        <developer>
-            <id>markb</id>
-            <name>Mark Bednarczyk</name>
-            <email>mark@slytechs.com</email>
-            <organization>Sly Technologies Inc</organization>
-        </developer>
-    </developers>
-
-    <scm>
-        <connection>scm:git:git://github.com/slytechs-repos/sdk-bom.git</connection>
-        <developerConnection>scm:git:ssh://github.com:slytechs-repos/sdk-bom.git</developerConnection>
-        <url>https://github.com/slytechs-repos/sdk-bom</url>
-    </scm>
-
     <properties>
-        <java.version>22</java.version>
-        <maven.compiler.release>22</maven.compiler.release>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <!-- Test dependency versions -->
+        <!-- Third-party dependency versions -->
         <junit.version>5.10.2</junit.version>
         <junit-platform.version>1.10.2</junit-platform.version>
         <cryptlex.version>3.32.0</cryptlex.version>
+        <slf4j.version>2.0.17</slf4j.version>
+        <logback.version>1.5.6</logback.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
 
-            <!-- SDK Core Modules -->
+            <!-- ============================================================ -->
+            <!-- SDK Core Modules                                              -->
+            <!-- ============================================================ -->
             <dependency>
                 <groupId>com.slytechs.sdk</groupId>
                 <artifactId>sdk-common</artifactId>
@@ -66,7 +45,9 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <!-- Protocol Packs -->
+            <!-- ============================================================ -->
+            <!-- Protocol Packs                                                -->
+            <!-- ============================================================ -->
             <dependency>
                 <groupId>com.slytechs.sdk</groupId>
                 <artifactId>sdk-protocol-core</artifactId>
@@ -88,7 +69,9 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <!-- jNetPcap -->
+            <!-- ============================================================ -->
+            <!-- jNetPcap (OSS - Maven Central)                               -->
+            <!-- ============================================================ -->
             <dependency>
                 <groupId>com.slytechs.sdk</groupId>
                 <artifactId>jnetpcap-sdk</artifactId>
@@ -105,8 +88,15 @@
                 <artifactId>jnetpcap-bindings</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.slytechs.sdk</groupId>
+                <artifactId>jnetpcap-examples</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-            <!-- jNetWorks -->
+            <!-- ============================================================ -->
+            <!-- jNetWorks OSS (Maven Central)                                -->
+            <!-- ============================================================ -->
             <dependency>
                 <groupId>com.slytechs.sdk</groupId>
                 <artifactId>jnetworks-sdk</artifactId>
@@ -118,8 +108,26 @@
                 <artifactId>jnetworks-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.slytechs.sdk</groupId>
+                <artifactId>jnetworks-pcap</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.slytechs.sdk</groupId>
+                <artifactId>jnetworks-file-pcap</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.slytechs.sdk</groupId>
+                <artifactId>jnetworks-examples</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-            <!-- jNetWorks Backends -->
+            <!-- ============================================================ -->
+            <!-- jNetWorks Commercial (maven.slytechs.com)                    -->
+            <!-- See https://www.slytechs.com/products for access              -->
+            <!-- ============================================================ -->
             <dependency>
                 <groupId>com.slytechs.sdk</groupId>
                 <artifactId>jnetworks-dpdk</artifactId>
@@ -132,13 +140,6 @@
             </dependency>
             <dependency>
                 <groupId>com.slytechs.sdk</groupId>
-                <artifactId>jnetworks-pcap</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <!-- Low-level Bindings -->
-            <dependency>
-                <groupId>com.slytechs.sdk</groupId>
                 <artifactId>jnetdpdk-bindings</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -148,66 +149,41 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <!-- Test Dependencies -->
-	        <dependency>
-	            <groupId>org.junit</groupId>
-	            <artifactId>junit-bom</artifactId>
-	            <version>5.10.2</version>
-	            <type>pom</type>
-	            <scope>import</scope>
-	        </dependency>
-			<!-- Licensing -->
-			<dependency>
-			    <groupId>com.cryptlex.lexactivator</groupId>
-			    <artifactId>lexactivator</artifactId>
-			    <version>${cryptlex.version}</version>
-			</dependency>
-			<!-- Logging facade -->
-			<dependency>
-			    <groupId>org.slf4j</groupId>
-			    <artifactId>slf4j-api</artifactId>
-			    <version>2.0.13</version>
-			    <scope>provided</scope>  <!-- Users provide impl -->
-			</dependency>
+            <!-- ============================================================ -->
+            <!-- Third-party dependencies                                      -->
+            <!-- ============================================================ -->
+
+            <!-- JUnit 5 - import BOM for full platform alignment -->
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- License management -->
+            <dependency>
+                <groupId>com.cryptlex.lexactivator</groupId>
+                <artifactId>lexactivator</artifactId>
+                <version>${cryptlex.version}</version>
+            </dependency>
+
+            <!-- Logging facade - consumers provide their own implementation -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
+            <!-- Logback - for examples and development/testing only -->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.12.1</version>
-                    <configuration>
-                        <release>${java.version}</release>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.4</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>3.5.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.6.3</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-
-    <repositories>
-        <repository>
-            <id>slytechs-releases</id>
-            <name>Sly Technologies Releases</name>
-            <url>https://maven.slytechs.com/repository/releases/</url>
-        </repository>
-    </repositories>
 
 </project>
